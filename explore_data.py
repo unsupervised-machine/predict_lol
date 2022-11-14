@@ -123,7 +123,7 @@ def visual_eda(df, target, col):
 
     #Tweak layout and display
     fig.tight_layout()
-
+    # fig.savefig("sample.png")
     return fig, gs
 
 
