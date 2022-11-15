@@ -136,7 +136,7 @@ corr_heatmap(df_filt)
 
 #remove variables with multicollinearity
 df_filt.drop(columns=['redKills', 'redDeaths', 'redFirstBlood'], inplace=True)
-
+df_filt.to_csv("data/logistic_regression_data")
 
 #Check for target variable imbalance
 fig, ax = plt.subplots(figsize=(8,6))
@@ -148,3 +148,5 @@ visual_eda(df_org, 'blueWins', 'blueTotalExperience')
 visual_eda(df_org, 'blueWins', 'redTotalExperience')
 visual_eda(df_org, 'blueWins', 'blueTotalGold')
 visual_eda(df_org, 'blueWins', 'redTotalGold')
+
+
