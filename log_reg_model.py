@@ -9,12 +9,17 @@ from sklearn.linear_model import LogisticRegression, LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
+from IPython.display import display
+
+import matplotlib as mpl
+mpl.use('TkAgg')
+
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
 import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
-
+# warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.filterwarnings('ignore')
 
 # Create functions to facilitate scaling, fitting, and evaluating multiple dataframes.
 def evaluate_model(model, X_train, y_train, X_test, y_test, digits=4, figsize=(10, 5), params=False):
@@ -142,3 +147,39 @@ X_train_org, X_test_org, y_train_org, y_test_org = split_scale(data_org, 'blueWi
 
 # Fit and evaluate
 log_reg_model = fit_eval(LogisticRegressionCV(random_state=42), X_train_filt, y_train_filt, X_test_filt, y_test_filt)
+
+
+# Create parameter grid for Logistic Regression gridsearch and fit to data
+log_reg = LogisticRegression(random_state=42)
+
+params = {'C': [0.001, 0.01, 0.1, 1, 10, 100, 1e6, 1e12],
+          'penalty': ['l1', 'l2', 'elastic_net'],
+          'fit_intercept': [True, False],
+          'solver': ["liblinear", "newton-cg", "lbfgs", "sag", "saga"],
+          'class_weight': ['balanced']
+          }
+log_grid =GridSearchCV(log_reg, params, scoring='recall_macro')
+log_grid.fit(X_train_filt, y_train_filt)
+
+#Print the best params for log_grid
+log_grid.best_params_
+
+#Evaluate best estimating model
+evaluate_model(log_grid.best_estimator_, X_train_filt, y_train_filt, X_test_filt, y_test_filt, params=True)
+
+
+# See a decrease in recall score, let's tune hyperparameters:
+# Create parameter grid for Logistic Regression gridsearch and fit to data (second time)
+log_reg_ref = LogisticRegression(random_state=42)
+
+params = {'C': [0.0001, 0.001],
+          'penalty': ['l1', 'l2', 'elastic_net'],
+          'solver':["liblinear", "newton-cg", "lbfgs", "sag", "saga"],
+          'class_weight': ['balanced']}
+log_grid_refined = GridSearchCV(log_reg_ref, params, scoring='recall_macro')
+log_grid_refined.fit(X_train_filt, y_train_filt)
+
+# Print best estimating model (second time)
+evaluate_model(log_grid_refined.best_estimator_, X_train_filt, y_train_filt, X_test_filt, y_test_filt, params=True)
+
+#this doesnt fix the improve recall score, log_reg is still the best model
