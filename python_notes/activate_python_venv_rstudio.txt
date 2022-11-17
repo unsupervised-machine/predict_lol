@@ -1,0 +1,21 @@
+#Activate python virtual environment in R studio
+
+(1) Works for sure
+#Activate python virtual environment in R studio
+https://stackoverflow.com/questions/59715101/how-to-get-reticulate-to-access-virtual-environment
+
+library(reticulate)
+use_virtualenv('~/predict_lol/.venv', required=TRUE)
+py_config()
+
+repl_python()
+
+
+(2) Maybe works
+#Force reticulate to look for virtual env python executable
+Sys.setenv("RETICULATE_PYTHON" = "~/predict_lol/.venv/Scripts/python.exe")
+
+#Launch REPL per usual
+reticulate::repl_python()
+
+

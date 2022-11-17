@@ -1,0 +1,8 @@
+#activate virtual environment in terminal
+  #change directory
+  cd predict_lol
+  #activate virtual environment (windows)
+  .venv\Scripts\activate
+  #view installed packages
+  pip list
+  
